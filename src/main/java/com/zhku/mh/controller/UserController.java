@@ -1,8 +1,10 @@
 package com.zhku.mh.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.zhku.mh.entities.User;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.zhku.mh.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,24 +16,34 @@ import java.util.List;
  * @create: 2019-09-24 10:10
  */
 @RestController
+@RequestMapping("/user")
 public class UserController {
+    @Autowired
+    private UserService userService;
 
-    @RequestMapping("/user")
-    public List<User> get() {
+    @RequestMapping("/list")
+    public PageInfo<User> list(@RequestParam Integer pageNum,
+                               @RequestParam Integer pageSize) {
+        return userService.getList(pageSize,pageNum);
+    }
 
-        List<User> list = new ArrayList<>();
+    @RequestMapping("/get/{id}")
+    public User get(@PathVariable Integer id) {
+        return userService.getUser(id);
+    }
 
-        User user = new User();
-        user.setId(1);
-        user.setName("李四");
+    @RequestMapping("/save")
+    public Integer get(@RequestBody User user) {
+        return userService.save(user);
+    }
 
-        User user1 = new User();
-        user1.setId(2);
-        user1.setName("张三");
+    @RequestMapping("/update")
+    public Integer update(@RequestBody User user){
+        return userService.update(user);
+    }
 
-        list.add(user);
-        list.add(user1);
-
-        return list;
+    @RequestMapping("/del/{id}")
+    public Integer del(@PathVariable Integer id) {
+        return userService.del(id);
     }
 }

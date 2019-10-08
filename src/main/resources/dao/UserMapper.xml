@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhku.mh.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.zhku.mh.entities.User">
+        <id column="id" property="id" jdbcType="INTEGER" ></id>
+        <result column="name" property="name" jdbcType="VARCHAR"></result>
+    </resultMap>
+
+    <insert id="saveUser" parameterType="com.zhku.mh.entities.User">
+        INSERT INTO user_info (name) VALUES (#{name})
+    </insert>
+
+    <select id="queryUserList" resultMap="BaseResultMap">
+        select id,name from user_info
+    </select>
+
+    <select id="getUser" resultMap="BaseResultMap">
+        select id,name from user_info where id = #{id}
+    </select>
+
+    <update id="updateUser" parameterType="com.zhku.mh.entities.User">
+        update user_info set name = #{name} where id = #{id}
+    </update>
+
+    <delete id="delUser">
+        delete from user_info where id = #{id}
+    </delete>
+</mapper>

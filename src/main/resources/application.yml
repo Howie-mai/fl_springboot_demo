@@ -1,0 +1,24 @@
+server:
+  port: 8088
+
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/demo?useUnicode=true&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+    initialPoolSize: 3
+    maxPoolSize: 50
+    minPoolSize: 3
+    maxIdle: 5
+
+mybatis:
+  mapper-locations: classpath:dao/*Mapper.xml
+  type-aliases-package: com.zhku.mh.entities
+
+logging:
+  level:
+    com:
+      zhku:
+        mh:
+          dao: debug
