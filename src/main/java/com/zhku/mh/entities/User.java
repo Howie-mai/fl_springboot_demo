@@ -1,13 +1,16 @@
 package com.zhku.mh.entities;
 
+import java.io.Serializable;
+
 /**
- * @ClassName:
- * @description
- * @author: mh
- * @create: 2019-09-24 10:10
+ * user_info<p/>
+ * @date Thu Oct 10 12:23:04 CST 2019
+ *
  */
-public class User {
+@SuppressWarnings("serial")
+public class User implements Serializable {
     private Integer id;
+
     private String name;
 
     public Integer getId() {
@@ -24,5 +27,17 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", name=").append(name);
+        sb.append("]");
+        return sb.toString();
     }
 }

@@ -2,51 +2,39 @@ package com.zhku.mh.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zhku.mh.common.AbstractServiceImpl;
 import com.zhku.mh.dao.UserDao;
 import com.zhku.mh.entities.User;
+import com.zhku.mh.entities.UserExample;
 import com.zhku.mh.service.UserService;
-import org.aspectj.lang.annotation.Aspect;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * @ClassName:
- * @description
- * @author: mh
- * @create: 2019-10-08 14:22
- */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractServiceImpl<User, UserExample, Integer> implements UserService {
+
+    @SuppressWarnings("unused")
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
-    private UserDao userDao;
+    public void setBaseDao(UserDao dao) {
+        this.baseDao = dao;
+    }
 
     @Override
-    public PageInfo<User> getList(Integer pageSize, Integer pageNum) {
-        PageHelper.startPage(pageNum,pageSize);
-        List<User> list = userDao.queryUserList();
-        PageInfo<User> pageInfo = new PageInfo<>(list);
+    public PageInfo<User> getList(Integer pageNum, Integer pageSize, String keywords) {
+        PageHelper.startPage(pageNum, pageSize);
+        UserExample example = new UserExample();
+        if (StringUtils.isNotBlank(keywords)) {
+            example.createCriteria().andNameLike("%" + keywords + "%");
+        }
+        List<User> dataList = baseDao.selectByExample(example);
+        PageInfo<User> pageInfo = new PageInfo<>(dataList);
         return pageInfo;
-    }
-
-    @Override
-    public User getUser(Integer id) {
-        return userDao.getUser(id);
-    }
-
-    @Override
-    public Integer save(User user) {
-        return userDao.saveUser(user);
-    }
-
-    @Override
-    public Integer update(User user) {
-        return userDao.updateUser(user);
-    }
-
-    @Override
-    public Integer del(Integer id) {
-        return userDao.delUser(id);
     }
 }

@@ -13,7 +13,7 @@ spring:
     maxIdle: 5
 
 mybatis:
-  mapper-locations: classpath:dao/*Mapper.xml
+  mapper-locations: classpath:dao/*.xml
   type-aliases-package: com.zhku.mh.entities
 
 logging:

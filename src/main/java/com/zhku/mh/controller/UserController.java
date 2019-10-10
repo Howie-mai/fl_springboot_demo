@@ -6,9 +6,6 @@ import com.zhku.mh.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @ClassName:
  * @description
@@ -23,27 +20,28 @@ public class UserController {
 
     @RequestMapping("/list")
     public PageInfo<User> list(@RequestParam Integer pageNum,
-                               @RequestParam Integer pageSize) {
-        return userService.getList(pageSize,pageNum);
+                               @RequestParam Integer pageSize,
+                               @RequestParam(defaultValue = " ") String keywords) {
+        return userService.getList(pageNum,pageSize,keywords);
     }
 
     @RequestMapping("/get/{id}")
     public User get(@PathVariable Integer id) {
-        return userService.getUser(id);
+        return userService.selectByPrimaryKey(id);
     }
 
     @RequestMapping("/save")
     public Integer get(@RequestBody User user) {
-        return userService.save(user);
+        return userService.insertSelective(user);
     }
 
     @RequestMapping("/update")
     public Integer update(@RequestBody User user){
-        return userService.update(user);
+        return userService.updateByPrimaryKey(user);
     }
 
     @RequestMapping("/del/{id}")
     public Integer del(@PathVariable Integer id) {
-        return userService.del(id);
+        return userService.deleteByPrimaryKey(id);
     }
 }
