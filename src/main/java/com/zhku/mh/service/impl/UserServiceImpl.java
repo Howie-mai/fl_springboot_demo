@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +27,9 @@ public class UserServiceImpl extends AbstractServiceImpl<User, UserExample, Inte
         this.baseDao = dao;
     }
 
+    @Autowired
+    private UserDao userDao;
+
     @Override
     public PageInfo<User> getList(Integer pageNum, Integer pageSize, String keywords) {
         PageHelper.startPage(pageNum, pageSize);
@@ -36,5 +40,11 @@ public class UserServiceImpl extends AbstractServiceImpl<User, UserExample, Inte
         List<User> dataList = baseDao.selectByExample(example);
         PageInfo<User> pageInfo = new PageInfo<>(dataList);
         return pageInfo;
+    }
+
+    @Override
+    public int UpdateList(List<User> UserList) {
+        return userDao.updateList(UserList);
+
     }
 }

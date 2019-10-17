@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhku.mh.dao.UserDao">
+  <!--<update id="updateList">-->
+      <!--<foreach collection="list" index="index" item="item" separator=";">-->
+        <!--update user_info-->
+        <!--<set>-->
+          <!--name = #{item.name}-->
+        <!--</set>-->
+        <!--WHERE id = #{item.id}-->
+      <!--</foreach>-->
+  <!--</update>-->
+  <update id="updateList" parameterType="java.util.List">
+    update user_info
+    <trim prefix="set" suffixOverrides=",">
+
+      <trim prefix="name =case" suffix="end,">
+        <foreach item="item" collection="list" index="index">
+          when id =
+          #{item.id} then #{item.name}
+        </foreach>
+      </trim>
+
+    </trim>
+    where id in
+    <foreach collection="list" index="index" item="item"
+             separator="," open="(" close=")">
+      #{item.id}
+    </foreach>
+  </update>
+
+  <!--<update id="updateList" parameterType="java.util.List">-->
+    <!--update res_mall_product_album-->
+    <!--<trim prefix="set" suffixOverrides=",">-->
+      <!--<trim prefix="album_type =case" suffix="end,">-->
+        <!--<foreach item="item" collection="list" index="index">-->
+          <!--when id =-->
+          <!--#{item.id} then #{item.albumType}-->
+        <!--</foreach>-->
+      <!--</trim>-->
+      <!--<trim prefix="album_url =case" suffix="end,">-->
+        <!--<foreach item="item" collection="list" index="index">-->
+          <!--when id =-->
+          <!--#{item.id} then #{item.albumUrl}-->
+        <!--</foreach>-->
+      <!--</trim>-->
+      <!--<trim prefix="remark =case" suffix="end,">-->
+        <!--<foreach item="item" collection="list" index="index">-->
+          <!--when id =-->
+          <!--#{item.id} then #{item.remark}-->
+        <!--</foreach>-->
+      <!--</trim>-->
+      <!--<trim prefix="product_id =case" suffix="end,">-->
+        <!--<foreach item="item" collection="list" index="index">-->
+          <!--when id =-->
+          <!--#{item.id} then #{item.productId}-->
+        <!--</foreach>-->
+      <!--</trim>-->
+      <!--<trim prefix="status =case" suffix="end,">-->
+        <!--<foreach item="item" collection="list" index="index">-->
+          <!--when id =-->
+          <!--#{item.id} then #{item.status}-->
+        <!--</foreach>-->
+      <!--</trim>-->
+    <!--</trim>-->
+    <!--where id in-->
+    <!--<foreach collection="list" index="index" item="item"-->
+             <!--separator="," open="(" close=")">-->
+      <!--#{item.id}-->
+    <!--</foreach>-->
+  <!--</update>-->
+</mapper>

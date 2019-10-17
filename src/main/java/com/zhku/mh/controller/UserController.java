@@ -6,6 +6,9 @@ import com.zhku.mh.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @ClassName:
  * @description
@@ -43,5 +46,21 @@ public class UserController {
     @RequestMapping("/del/{id}")
     public Integer del(@PathVariable Integer id) {
         return userService.deleteByPrimaryKey(id);
+    }
+
+    @RequestMapping("/updateList")
+    public Integer updateList(){
+        List<User> dataList = new ArrayList<>();
+        User user = new User();
+        user.setName("李四1");
+        user.setId(2);
+        dataList.add(user);
+
+        User user1 = new User();
+        user1.setName("张三");
+        user1.setId(3);
+        dataList.add(user1);
+
+         return userService.UpdateList(dataList);
     }
 }
