@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhku.mh.dao.HrDao">
+  <resultMap id="extraBaseResultMap" type="com.zhku.mh.entities.Hr" extends="com.zhku.mh.dao.HrDao.BaseResultMap">
+    <collection property="roles" ofType="com.zhku.mh.entities.Role" select="org.sang.mapper.HrMapper.getRolesByHrId"
+                column="id"></collection>
+  </resultMap>
+
+  <select id="getRolesByHrId" resultType="com.zhku.mh.entities.Role">
+    SELECT
+        r.*
+    FROM
+        hr_role h
+    LEFT JOIN
+        role r on h.rid = r.id
+    WHERE
+        h.hrid = #{id}
+  </select>
+</mapper>

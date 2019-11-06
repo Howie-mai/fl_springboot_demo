@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhku.mh.dao.EmployeeDao">
+    <resultMap id="externBaseResultMap" type="com.zhku.mh.entities.DTO.EmployeeDTO"
+               extends="com.zhku.mh.dao.EmployeeDao.BaseResultMap">
+        <result column="nationName" property="nationName" javaType="java.lang.String"/>
+        <result column="politicsStatusName" property="politicsStatusName" javaType="java.lang.String"/>
+        <result column="positionName" property="positionName" javaType="java.lang.String"/>
+        <result column="jobLevelName" property="jobLevelName" javaType="java.lang.String"/>
+        <result column="departmentName" property="departmentName" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="getByDTO" resultMap="externBaseResultMap" parameterType="com.zhku.mh.entities.DTO.EmployeeDTO">
+        SELECT
+            emp.*,
+            n.`name` AS nationName,
+            ps.`name` AS politicsStatusName,
+            d.`name` AS departmentName,
+            j.`name` AS jobLevelName,
+            p.`name` AS positionName
+        FROM
+            employee emp
+        LEFT JOIN nation n ON n.id = emp.nationId
+        LEFT JOIN politicsstatus ps ON ps.id = emp.politicId
+        LEFT JOIN department d ON d.id = emp.departmentId
+        LEFT JOIN joblevel j ON j.id = emp.jobLevelId
+        LEFT JOIN position p ON p.id = emp.posId
+        where emp.name like concat('%',#{name},'%')
+        <if test="engageform!=null and engageform!=''">
+            AND emp.engageForm=#{engageform}
+        </if>
+        <if test="politicid!=null and politicid!=''">
+            AND emp.politicId=#{politicid}
+        </if>
+        <if test="nationid!=null and nationid!=''">
+            AND emp.nationId=#{nationid}
+        </if>
+        <if test="posid!=null and posid!=''">
+            AND emp.posId=#{posid}
+        </if>
+        <if test="joblevelid!=null and joblevelid!=''">
+            AND emp.jobLevelId=#{joblevelid}
+        </if>
+        <if test="departmentid!=null and departmentid!=''">
+            AND emp.departmentId=#{departmentid}
+        </if>
+        <if test="startBeginDate!=null and endBeginDate!=null">
+            AND emp.beginDate BETWEEN #{startBeginDate} AND #{endBeginDate}
+        </if>
+    </select>
+
+    <select id="getMaxWorkID" resultMap="com.zhku.mh.dao.EmployeeDao.BaseResultMap">
+        SELECT * from employee where id=(select max(id) from employee)
+    </select>
+</mapper>

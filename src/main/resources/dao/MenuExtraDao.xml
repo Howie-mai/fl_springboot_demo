@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhku.mh.dao.MenuDao">
+    <resultMap id="externBaseResultMap" type="com.zhku.mh.entities.DTO.MenuDTO" extends="com.zhku.mh.dao.MenuDao.BaseResultMap">
+        <association property="meta" javaType="com.zhku.mh.entities.DTO.MenuMeta">
+            <result column="keepAlive" property="keepAlive"/>
+            <result column="requireAuth" property="requireAuth"/>
+        </association>
+        <collection property="roles" ofType="com.zhku.mh.entities.Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="rnamezh" property="namezh"/>
+        </collection>
+        <collection property="children" ofType="com.zhku.mh.entities.DTO.MenuDTO" columnPrefix="child_">
+            <id column="id" jdbcType="INTEGER" property="id" />
+            <result column="url" jdbcType="VARCHAR" property="url" />
+            <result column="path" jdbcType="VARCHAR" property="path" />
+            <result column="component" jdbcType="VARCHAR" property="component" />
+            <result column="name" jdbcType="VARCHAR" property="name" />
+            <result column="iconCls" jdbcType="VARCHAR" property="iconcls" />
+            <result column="parentId" jdbcType="INTEGER" property="parentid" />
+            <result column="enabled" jdbcType="BIT" property="enabled" />
+            <association property="meta" javaType="com.zhku.mh.entities.DTO.MenuMeta">
+                <result column="keepAlive" property="keepAlive"/>
+                <result column="requireAuth" property="requireAuth"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="getAllMenu" resultMap="externBaseResultMap">
+        SELECT
+          m.*,
+          r.`id` AS rid,
+          r.`name` AS rname,
+          r.`nameZh` AS rnamezh
+        FROM
+          menu m
+        LEFT JOIN menu_role mr ON m.`id` = mr.`mid`
+        LEFT JOIN role r ON mr.`rid` = r.`id`
+        WHERE
+          m.`enabled` = TRUE
+        ORDER BY
+          m.`id` DESC
+    </select>
+
+    <select id="getMenusByHrId" resultMap="externBaseResultMap">
+        SELECT DISTINCT
+            m1.*,
+            m2.id AS child_id,
+            m2.url AS child_url,
+            m2.path AS child_path,
+            m2.component AS child_component,
+            m2.name AS child_name,
+            m2.enabled AS child_enabled,
+            m2.iconCls AS child_iconCls,
+            m2.parentId AS child_parentId,
+            m2.requireAuth AS child_requireAuth,
+            m2.keepAlive AS child_keepAlive
+        FROM
+            menu m1,
+            menu m2,
+            menu_role mr,
+            role r,
+            hr_role hrr
+        WHERE
+            m1.id = m2.parentid
+            AND mr.rid = r.id
+            AND mr.mid = m2.id
+            AND hrr.rid = r.id
+            AND hrr.hrid = #{hrId}
+    </select>
+</mapper>

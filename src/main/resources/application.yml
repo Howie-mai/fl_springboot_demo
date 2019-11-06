@@ -2,15 +2,36 @@ server:
   port: 8088
 
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3306/demo?useUnicode=true&useSSL=true&serverTimezone=UTC&allowMultiQueries=true
+    url: jdbc:mysql://hymbb.cn:3306/vhr?useUnicode=true&useSSL=true&serverTimezone=UTC&allowMultiQueries=true
     driver-class-name: com.mysql.jdbc.Driver
     initialPoolSize: 3
     maxPoolSize: 50
     minPoolSize: 3
     maxIdle: 5
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  redis:
+    database: 0
+    host: hymbb.cn
+#    host: 10.52.161.112
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: -1ms
+  cache:
+    cache-names: menus_cache
+    redis:
+      time-to-live: 1800s
+
 
 mybatis:
   mapper-locations: classpath:dao/*.xml
