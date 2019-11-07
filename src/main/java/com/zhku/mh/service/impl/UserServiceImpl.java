@@ -47,4 +47,10 @@ public class UserServiceImpl extends AbstractServiceImpl<User, UserExample, Inte
         return userDao.updateList(UserList);
 
     }
+
+    @Override
+    public int InsertList(List<User> UserList) {
+        return userDao.insertList(UserList);
+
+    }
 }

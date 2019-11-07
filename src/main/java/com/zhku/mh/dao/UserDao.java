@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface UserDao extends BaseDao<User, UserExample, Integer> {
     int updateList(@Param("list") List<User> UserList);
+
+    int insertList(@Param("list") List<User> UserList);
 }

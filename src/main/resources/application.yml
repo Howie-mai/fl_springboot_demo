@@ -7,7 +7,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://hymbb.cn:3306/vhr?useUnicode=true&useSSL=true&serverTimezone=UTC&allowMultiQueries=true
+    url: jdbc:mysql://hymbb.cn:3306/vhr?useUnicode=true&useSSL=true&serverTimezone=UTC&allowMultiQueries=true&rewriteBatchedStatements=true
     driver-class-name: com.mysql.jdbc.Driver
     initialPoolSize: 3
     maxPoolSize: 50

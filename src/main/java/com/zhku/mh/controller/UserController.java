@@ -63,4 +63,18 @@ public class UserController {
 
          return userService.UpdateList(dataList);
     }
+
+    @RequestMapping("/insertList")
+    public Integer insertList(){
+        List<User> dataList = new ArrayList<>();
+        User user = new User();
+        user.setName("溜溜");
+        dataList.add(user);
+
+        User user1 = new User();
+        user1.setName("七七");
+        dataList.add(user1);
+
+        return userService.InsertList(dataList);
+    }
 }

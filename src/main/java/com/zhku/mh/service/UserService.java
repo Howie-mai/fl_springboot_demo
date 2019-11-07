@@ -12,4 +12,6 @@ public interface UserService extends BaseService<User, UserExample, Integer> {
     PageInfo<User> getList(Integer pageNum, Integer pageSize, String keywords);
 
     int UpdateList(List<User> UserList);
+
+    int InsertList(List<User> UserList);
 }
