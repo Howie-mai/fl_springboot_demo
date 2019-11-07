@@ -2,8 +2,10 @@ server:
   port: 8088
 
 spring:
+  #json数据配置
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  #mybatis数据源
   datasource:
     username: root
     password: 123456
@@ -14,7 +16,7 @@ spring:
     minPoolSize: 3
     maxIdle: 5
     type: com.alibaba.druid.pool.DruidDataSource
-
+  #redis
   redis:
     database: 0
     host: hymbb.cn
@@ -27,12 +29,20 @@ spring:
         max-idle: 8
         max-active: 8
         max-wait: -1ms
+  #缓存
   cache:
     cache-names: menus_cache
     redis:
       time-to-live: 1800s
-
-
+  #邮件
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 193533653@qq.com
+    password: pclujqwpmwsqcbef
+    default-encoding: UTF-8
+    properties.mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+    properties.mail.debug: true
 mybatis:
   mapper-locations: classpath:dao/*.xml
   type-aliases-package: com.zhku.mh.entities

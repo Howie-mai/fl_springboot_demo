@@ -114,6 +114,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().permitAll()
                 .and()
+                 .rememberMe()
+                .and()
                 .csrf().disable()
                 .exceptionHandling().accessDeniedHandler(authenticationAccessDeniedHandler);
     }

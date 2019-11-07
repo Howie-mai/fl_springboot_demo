@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -25,16 +26,9 @@ public class SpringbootDemoApplicationTests {
 
     @Test
     public void tse(){
-        List<User> dataList = new ArrayList<>();
-        User user = new User();
-        user.setName("张三1");
-        user.setId(1);
-        dataList.add(user);
-
-        User user1 = new User();
-        user1.setName("张三1");
-        user1.setId(1);
-        dataList.add(user1);
-        System.out.println(userService.UpdateList(dataList));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        // 加密
+        String encodedPassword = passwordEncoder.encode("123456");
+        System.out.println(encodedPassword);
     }
 }

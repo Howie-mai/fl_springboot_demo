@@ -2,16 +2,22 @@ package com.zhku.mh.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.zhku.mh.common.result.RespBean;
+import com.zhku.mh.common.thread.EMailRunnable;
 import com.zhku.mh.entities.DTO.EmployeeDTO;
 import com.zhku.mh.entities.Employee;
 import com.zhku.mh.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.TemplateEngine;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 @RestController
 @RequestMapping("/emp")
@@ -19,15 +25,13 @@ public  class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
-    private NationService nationService;
+    ExecutorService executorService;
     @Autowired
-    private PoliticsstatusService politicsstatusService;
+    TemplateEngine templateEngine;
     @Autowired
-    private DepartmentService departmentService;
-    @Autowired
-    private PositionService positionService;
-    @Autowired
-    private JobLevelService jobLevelService;
+    JavaMailSender javaMailSender;
+    @Value("${spring.mail.username}")
+    String emailAddress;
 
     @RequestMapping("/list")
     public RespBean getList(@RequestParam(required = false) Integer pageNum,
@@ -50,24 +54,17 @@ public  class EmployeeController {
 
     @RequestMapping("/basicData")
     public RespBean getBasicdata(){
-        Map<String, Object> map = new HashMap<>();
-        map.put("nations", nationService.selectByExample(null));
-        map.put("politics", politicsstatusService.selectByExample(null));
-        map.put("deps", departmentService.queryWithChildren());
-        map.put("positions", positionService.selectByExample(null));
-        map.put("joblevels", jobLevelService.selectByExample(null));
+        Map<String, Object> map = employeeService.getBasicData();
         return RespBean.ok("基础信息查询成功",map);
     }
 
     @RequestMapping("/save")
     public RespBean save(@RequestBody Employee employee){
-        Integer workId = employeeService.getMaxWorkId();
-        String workID = String.format("%08d",workId);
-        employee.setWorkid(workID);
-        Integer id = employeeService.insertSelectiveForId(employee);
-        employee.setId(id);
-        if(id != null){
-            return RespBean.ok("添加成功",employee);
+        Map<String,Object> map = employeeService.saveEmp(employee);
+        EmployeeDTO employeeDTO = (EmployeeDTO) map.get("dto");
+        executorService.execute(new EMailRunnable(employeeDTO,javaMailSender,templateEngine,emailAddress));
+        if(map.get("result").toString().equals("1")){
+            return RespBean.ok("添加成功",employeeDTO);
         }
         return RespBean.error("添加失败");
     }

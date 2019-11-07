@@ -4,19 +4,21 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhku.mh.common.AbstractServiceImpl;
 import com.zhku.mh.dao.EmployeeDao;
+import com.zhku.mh.entities.*;
 import com.zhku.mh.entities.DTO.EmployeeDTO;
-import com.zhku.mh.entities.Employee;
-import com.zhku.mh.entities.EmployeeExample;
-import com.zhku.mh.service.EmployeeService;
+import com.zhku.mh.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployeeServiceImpl extends AbstractServiceImpl<Employee, EmployeeExample, Integer> implements EmployeeService {
@@ -30,11 +32,23 @@ public class EmployeeServiceImpl extends AbstractServiceImpl<Employee, EmployeeE
     }
 
     @Autowired
+    private NationService nationService;
+    @Autowired
+    private PoliticsstatusService politicsstatusService;
+    @Autowired
+    private DepartmentService departmentService;
+    @Autowired
+    private PositionService positionService;
+    @Autowired
+    private JobLevelService jobLevelService;
+
+    @Autowired
     private EmployeeDao employeeDao;
 
     SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
     SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
     SimpleDateFormat birthdayFormat = new SimpleDateFormat("yyyy-MM-dd");
+    DecimalFormat decimalFormat = new DecimalFormat("##.00");
 
     @Override
     public PageInfo<EmployeeDTO> getList(Integer pageNum, Integer pageSize, Employee employee, String beginDateScope) {
@@ -66,8 +80,7 @@ public class EmployeeServiceImpl extends AbstractServiceImpl<Employee, EmployeeE
         return baseDao.selectByExample(null);
     }
 
-    @Override
-    public Integer getMaxWorkId() {
+    private Integer getMaxWorkId() {
         Employee employee = employeeDao.getMaxWorkID();
         if (employee.getWorkid() == null) {
             return 0;
@@ -80,5 +93,56 @@ public class EmployeeServiceImpl extends AbstractServiceImpl<Employee, EmployeeE
        EmployeeExample example = new EmployeeExample();
        example.createCriteria().andIdIn(ids);
        return baseDao.deleteByExample(example);
+    }
+
+    @Override
+    public Map<String, Object> saveEmp(Employee employee){
+
+        Integer workId = getMaxWorkId();
+        String workID = String.format("%08d",workId);
+        employee.setWorkid(workID);
+
+        /*
+        * 合同年限
+        */
+        Date beginContract = employee.getBegincontract();
+        Date endContract = employee.getEndcontract();
+        Double contractTerm = (Double.parseDouble(yearFormat.format(endContract)) - Double.parseDouble(yearFormat.format(beginContract))) * 12 + Double.parseDouble(monthFormat.format(endContract)) - Double.parseDouble(monthFormat.format(beginContract));
+        employee.setContractterm(Double.parseDouble(decimalFormat.format(contractTerm / 12)));
+
+        int count = baseDao.insertSelective(employee);
+
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee,employeeDTO);
+
+        List<Position> positions = positionService.selectByExample(null);
+        for (Position position:positions) {
+            if(employeeDTO.getPosid() == position.getId()){
+                employeeDTO.setPositionName(position.getName());
+            }
+        }
+
+        List<Department> departments = departmentService.selectByExample(null);
+        for (Department department:departments) {
+            if(employeeDTO.getDepartmentid() == department.getId()){
+                employeeDTO.setDepartmentName(department.getName());
+            }
+        }
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("result",count);
+        map.put("dto",employeeDTO);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getBasicData() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("nations", nationService.selectByExample(null));
+        map.put("politics", politicsstatusService.selectByExample(null));
+        map.put("deps", departmentService.queryWithChildren());
+        map.put("positions", positionService.selectByExample(null));
+        map.put("joblevels", jobLevelService.selectByExample(null));
+        return map;
     }
 }
