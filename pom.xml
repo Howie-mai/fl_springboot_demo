@@ -23,6 +23,11 @@
         <pagehepler.version>1.2.12</pagehepler.version>
         <!--tx-->
         <tx.version>5.1.8.RELEASE</tx.version>
+        <!--jjwt-->
+        <jjwt.version>0.9.0</jjwt.version>
+        <java-jwt.version>3.4.0</java-jwt.version>
+        <!--fastjson-->
+        <fastjson.version>1.2.47</fastjson.version>
         <!-- commons -->
         <commons-beanutils.version>1.8.0</commons-beanutils.version>
         <commons-cli.version>1.2</commons-cli.version>
@@ -68,6 +73,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+        <!--jjwt-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java-jwt.version}</version>
+        </dependency>
+
         <!--mybatis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
