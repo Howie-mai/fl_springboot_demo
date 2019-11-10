@@ -18,5 +18,9 @@ public interface EmployeeService extends BaseService<Employee, EmployeeExample, 
 
     Map<String, Object> saveEmp(Employee employee);
 
-    Map<String, Object> getBasicData();
+    int addEmps(List<EmployeeDTO> dataList);
+
+    Map<String, Object> getBasicData(boolean isWithChildren);
+
+    List<EmployeeDTO> getAllEmpDto();
 }

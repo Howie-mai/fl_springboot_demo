@@ -29,6 +29,28 @@ public class Politicsstatus implements Serializable {
         this.name = name;
     }
 
+    public Politicsstatus(String name) {
+        this.name = name;
+    }
+
+    public Politicsstatus() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Politicsstatus that = (Politicsstatus) o;
+
+        return name != null ? name.equals(that.name) : that.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

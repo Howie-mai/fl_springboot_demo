@@ -76,6 +76,12 @@ public class EmployeeServiceImpl extends AbstractServiceImpl<Employee, EmployeeE
     }
 
     @Override
+    public List<EmployeeDTO> getAllEmpDto() {
+        EmployeeDTO dto = new EmployeeDTO();
+        return employeeDao.getByDTO(dto);
+    }
+
+    @Override
     public List<Employee> getList() {
         return baseDao.selectByExample(null);
     }
@@ -136,13 +142,23 @@ public class EmployeeServiceImpl extends AbstractServiceImpl<Employee, EmployeeE
     }
 
     @Override
-    public Map<String, Object> getBasicData() {
+    public int addEmps(List<EmployeeDTO> dataList){
+        return employeeDao.addEmps(dataList);
+    }
+
+    @Override
+    public Map<String, Object> getBasicData(boolean isWithChildren) {
         Map<String, Object> map = new HashMap<>();
         map.put("nations", nationService.selectByExample(null));
         map.put("politics", politicsstatusService.selectByExample(null));
-        map.put("deps", departmentService.queryWithChildren());
+        if(isWithChildren){
+            map.put("deps", departmentService.queryWithChildren());
+        }else {
+            map.put("deps", departmentService.selectByExample(null));
+        }
         map.put("positions", positionService.selectByExample(null));
         map.put("joblevels", jobLevelService.selectByExample(null));
         return map;
     }
+
 }

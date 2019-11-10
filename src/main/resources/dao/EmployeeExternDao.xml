@@ -25,7 +25,10 @@
         LEFT JOIN department d ON d.id = emp.departmentId
         LEFT JOIN joblevel j ON j.id = emp.jobLevelId
         LEFT JOIN position p ON p.id = emp.posId
-        where emp.name like concat('%',#{name},'%')
+        where 1= 1
+        <if test="name!=null and name!=''">
+            AND emp.name like concat('%',#{name},'%')
+        </if>
         <if test="engageform!=null and engageform!=''">
             AND emp.engageForm=#{engageform}
         </if>
@@ -52,4 +55,31 @@
     <select id="getMaxWorkID" resultMap="com.zhku.mh.dao.EmployeeDao.BaseResultMap">
         SELECT * from employee where id=(select max(id) from employee)
     </select>
+
+    <insert id="addEmps">
+        insert into employee (
+            name, gender,
+            birthday, idCard, wedlock, nationId,
+            nativePlace, politicId, email,
+            phone, address, departmentId,
+            jobLevelId, posId, engageForm,
+            tiptopDegree, specialty, school,
+            beginDate,workID,
+            contractTerm, conversionTime,
+            beginContract, endContract
+        )
+        values
+        <foreach collection="emps" item="emp" separator=",">
+            (#{emp.name,jdbcType=VARCHAR}, #{emp.gender,jdbcType=CHAR},
+            #{emp.birthday,jdbcType=DATE}, #{emp.idcard,jdbcType=CHAR}, #{emp.wedlock,jdbcType=CHAR},#{emp.nationid,jdbcType=BIGINT},
+            #{emp.nativeplace,jdbcType=VARCHAR}, #{emp.politicid,jdbcType=BIGINT}, #{emp.email,jdbcType=VARCHAR},
+            #{emp.phone,jdbcType=VARCHAR}, #{emp.address,jdbcType=VARCHAR}, #{emp.departmentid,jdbcType=BIGINT},
+            #{emp.joblevelid,jdbcType=BIGINT}, #{emp.posid,jdbcType=BIGINT}, #{emp.engageform,jdbcType=VARCHAR},
+            #{emp.tiptopdegree,jdbcType=VARCHAR}, #{emp.specialty,jdbcType=VARCHAR}, #{emp.school,jdbcType=VARCHAR},
+            #{emp.begindate,jdbcType=DATE},#{emp.workid,jdbcType=BIGINT},
+            #{emp.contractterm,jdbcType=BIGINT}, #{emp.conversiontime,jdbcType=DATE},
+            #{emp.begincontract,jdbcType=DATE}, #{emp.endcontract,jdbcType=DATE}
+            )
+        </foreach>
+    </insert>
 </mapper>

@@ -115,6 +115,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().permitAll()
                 .and()
                  .rememberMe().rememberMeParameter("rememberMe")
+                //3天
+                .tokenValiditySeconds(60 * 60 * 24 * 3)
                 .and()
                 .csrf().disable()
                 .exceptionHandling().accessDeniedHandler(authenticationAccessDeniedHandler);

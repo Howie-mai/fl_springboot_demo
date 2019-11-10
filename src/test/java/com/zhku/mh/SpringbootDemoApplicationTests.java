@@ -1,6 +1,7 @@
 package com.zhku.mh;
 
 import com.zhku.mh.entities.User;
+import com.zhku.mh.service.EmployeeService;
 import com.zhku.mh.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,9 +20,12 @@ import java.util.List;
 public class SpringbootDemoApplicationTests {
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmployeeService employeeService;
 
     @Test
     public void contextLoads() {
+        System.out.println(employeeService.getAllEmpDto());
     }
 
     @Test
