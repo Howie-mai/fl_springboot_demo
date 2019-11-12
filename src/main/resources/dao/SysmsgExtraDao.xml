@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhku.mh.dao.SysmsgDao">
-  <resultMap id="extraBaseResultMap" type="com.zhku.mh.entities.DTO.SysmsgDTO" extends="com.zhku.mh.dao.SysmsgDao.BaseResultMap">
-    <association property="msgContent" javaType="com.zhku.mh.entities.MsgContent">
-      <id column="msgid" property="id" jdbcType="INTEGER"></id>
-      <result column="title" property="title" jdbcType="VARCHAR" />
-      <result column="message" property="message" jdbcType="VARCHAR" />
-      <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
-    </association>
-  </resultMap>
-  <select id="getSysMsg" resultMap="extraBaseResultMap">
-       SELECT
-          sm.*,
-          mc.`message`,
-          mc.`title`,
-          mc.`createDate`,
-          mc.`id` AS msgid
-      FROM
+    <resultMap id="extraBaseResultMap" type="com.zhku.mh.entities.DTO.SysmsgDTO" extends="com.zhku.mh.dao.SysmsgDao.BaseResultMap">
+        <association property="msgContent" javaType="com.zhku.mh.entities.MsgContent">
+        <id column="msgid" property="id" jdbcType="INTEGER"></id>
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="message" property="message" jdbcType="VARCHAR" />
+        <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
+        </association>
+    </resultMap>
+    <select id="getSysMsg" resultMap="extraBaseResultMap">
+        SELECT
+            sm.*,
+            mc.`message`,
+            mc.`title`,
+            mc.`createDate`,
+            mc.`id` AS msgid
+        FROM
           sysmsg sm
-      LEFT JOIN msgcontent mc on sm.mid = mc.id
-      WHERE sm.`hrid` = #{hrId}
-  </select>
+        LEFT JOIN msgcontent mc on sm.mid = mc.id
+        WHERE sm.`hrid` = #{hrId}
+        order by mc.createDate DESC
+    </select>
+
+    <insert id="insertMsgMutipart">
+        INSERT INTO sysmsg(mid,hrid) VALUES
+    <foreach collection="hrs" item="hr" separator=",">
+        (#{mid},#{hr.id})
+    </foreach>
+    </insert>
+
+    <update id="updateMsgStatus">
+        UPDATE sysmsg set state=1 WHERE hrid=#{hrid}
+        <if test="mid!=-1">
+            AND mid=#{mid}
+        </if>
+    </update>
 </mapper>

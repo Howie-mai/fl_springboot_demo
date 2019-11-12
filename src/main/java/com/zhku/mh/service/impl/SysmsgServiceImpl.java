@@ -6,8 +6,10 @@ import com.zhku.mh.common.AbstractServiceImpl;
 import com.zhku.mh.common.utils.HrUtil;
 import com.zhku.mh.dao.SysmsgDao;
 import com.zhku.mh.entities.DTO.SysmsgDTO;
+import com.zhku.mh.entities.Hr;
 import com.zhku.mh.entities.Sysmsg;
 import com.zhku.mh.entities.SysmsgExample;
+import com.zhku.mh.service.HrService;
 import com.zhku.mh.service.SysmsgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,5 +42,19 @@ public class SysmsgServiceImpl extends AbstractServiceImpl<Sysmsg, SysmsgExample
     @Override
     public List<SysmsgDTO> getSysMsgListByHrid() {
         return sysmsgDao.getSysMsg(HrUtil.getCurrentHr().getId());
+    }
+
+    @Override
+    public Integer insertMsgMutipart(List<Hr> hrs, Integer mid) {
+        return sysmsgDao.insertMsgMutipart(hrs,mid);
+    }
+
+    @Override
+    public Boolean updateMsgStatus(Integer mid) {
+        if (mid != -1) {
+            return sysmsgDao.updateMsgStatus(mid,HrUtil.getCurrentHr().getId()) == 1;
+        }
+        sysmsgDao.updateMsgStatus(mid,HrUtil.getCurrentHr().getId());
+        return true;
     }
 }
