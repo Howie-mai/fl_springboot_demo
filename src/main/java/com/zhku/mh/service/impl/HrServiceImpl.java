@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 public class HrServiceImpl extends AbstractServiceImpl<Hr, HrExample, Integer> implements HrService {
-    
+
     @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(HrServiceImpl.class);
 
@@ -42,5 +42,18 @@ public class HrServiceImpl extends AbstractServiceImpl<Hr, HrExample, Integer> i
         List<Role> roles = hrDao.getRolesByHrId(hr.getId());
         hr.setRoles(roles);
         return hr;
+    }
+
+    @Override
+    public List<Hr> getAllHr(Integer hrId) {
+       if(hrId == -1){
+         /*
+         * 查询所有hr信息
+         */
+         return baseDao.selectByExample(null);
+       }
+       HrExample example = new HrExample();
+       example.createCriteria().andIdNotEqualTo(hrId);
+       return baseDao.selectByExample(example);
     }
 }
