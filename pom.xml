@@ -27,7 +27,7 @@
         <jjwt.version>0.9.0</jjwt.version>
         <java-jwt.version>3.4.0</java-jwt.version>
         <!--fastjson-->
-        <fastjson.version>1.2.47</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <!--execl-->
         <poi.version>3.17</poi.version>
         <!-- commons -->
